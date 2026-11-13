@@ -15,6 +15,15 @@ run/main_scene="uid://dxydbdt35s0a4"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcdgt73wlwq4x"
 
+[autoload]
+
+GameplayAbilitySystem="*uid://u2lf4qtnkmft"
+DamageCalculator="*uid://b2jxgcjagrkdx"
+TagManager="*uid://crdi6238nttlg"
+AbilityEventBus="*uid://dly4cms3ynkwf"
+GameplayCueManager="*uid://b4t83autfu2j7"
+MCPRuntimeProbe="*res://addons/godot_mcp/runtime/mcp_runtime_probe.gd"
+
 [display]
 
 window/size/viewport_width=320
@@ -22,6 +31,10 @@ window/size/viewport_height=180
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_ability_system/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
 
 [importer_defaults]
 
