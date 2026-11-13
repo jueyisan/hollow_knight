@@ -63,6 +63,17 @@ const ANIM_ATTACK_DOWN := "下劈"
 # 判定“正在移动”的最小水平速度阈值
 const MOVE_THRESHOLD := 1.0
 
+# ---- 攻击命中框 ----
+## 所有攻击命中框的节点路径，统一管理以避免动画被打断后判定残留。
+const HITBOX_PATHS := [
+	"HitBox/Attack1/CollisionPolygon2D",
+	"HitBox/Attack2/CollisionPolygon2D",
+	"HitBox/AttackUp/CollisionPolygon2D",
+	"HitBox/AttackDown/CollisionPolygon2D",
+]
+
+var _attack_hitboxes: Array[CollisionPolygon2D] = []
+
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _current_anim: String = ""
@@ -85,6 +96,12 @@ var isStateNew = true
 
 func _ready() -> void:
 	anim.animation_finished.connect(_on_animation_finished)
+	_attack_hitboxes.clear()
+	for path in HITBOX_PATHS:
+		var hitbox := get_node_or_null(path) as CollisionPolygon2D
+		if hitbox != null:
+			_attack_hitboxes.append(hitbox)
+	_disable_all_hitboxes()
 
 func _physics_process(delta: float) -> void:
 	_dash_cooldown_timer = max(_dash_cooldown_timer - delta, 0.0)
@@ -99,8 +116,19 @@ func _physics_process(delta: float) -> void:
 	isStateNew = false
 
 func change_state(newState):
+	# 离开攻击状态时统一关闭命中框，防止动画中断导致判定残留
+	if _is_attack_state(currentState) and not _is_attack_state(newState):
+		_disable_all_hitboxes()
 	currentState = newState
 	isStateNew = true
+
+func _is_attack_state(state) -> bool:
+	return state in [State.ATTACK, State.ATTACK_UP, State.ATTACK_DOWN]
+
+## 关闭所有攻击命中框。攻击动画会在各自的判定帧重新开启。
+func _disable_all_hitboxes() -> void:
+	for hitbox in _attack_hitboxes:
+		hitbox.disabled = true
 
 # ---------------- 动画状态机 ----------------
 func _update_animation() -> void:
@@ -223,7 +251,6 @@ func process_attack(delta: float) -> void:
 	if isStateNew:
 		_begin_attack()
 	elif Input.is_action_just_pressed("dash") and _dash_cooldown_timer <= 0:
-		# 空洞骑士中冲刺可以取消攻击后摇
 		call_deferred("change_state", State.DASH)
 		return
 
@@ -233,6 +260,7 @@ func process_attack(delta: float) -> void:
 ## 根据当前攻击状态播放对应动画。
 func _begin_attack() -> void:
 	_is_double_jumping = false
+	_disable_all_hitboxes()
 
 	var anim_name: String
 	match currentState:
