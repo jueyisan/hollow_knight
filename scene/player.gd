@@ -55,6 +55,10 @@ const ANIM_JUMP := "跳跃"
 const ANIM_FALL := "下落"
 const ANIM_DOUBLE_JUMP := "二段跳"
 const ANIM_DASH := "冲刺"
+const ANIM_ATTACK_SLASH1 := "横劈1"
+const ANIM_ATTACK_SLASH2 := "横劈2"
+const ANIM_ATTACK_UP := "上劈"
+const ANIM_ATTACK_DOWN := "下劈"
 
 # 判定“正在移动”的最小水平速度阈值
 const MOVE_THRESHOLD := 1.0
@@ -72,6 +76,10 @@ var _is_dashing: bool = false
 var _dash_cooldown_timer: float = 0.0
 var _dash_direction: float = 1.0
 
+# ---- 攻击状态 ----
+## 横劈交替标记：false 下一次为横劈1，true 下一次为横劈2。
+var _next_slash_is_second: bool = false
+
 var currentState = State.NORMAL
 var isStateNew = true
 
@@ -86,6 +94,8 @@ func _physics_process(delta: float) -> void:
 			process_normal(delta)
 		State.DASH:
 			process_dash(delta)
+		State.ATTACK, State.ATTACK_UP, State.ATTACK_DOWN:
+			process_attack(delta)
 	isStateNew = false
 
 func change_state(newState):
@@ -168,6 +178,8 @@ func process_normal(delta):
 	_update_timers_after_move(delta)
 	_update_animation()
 	
+	if _try_start_attack():
+		return
 	if Input.is_action_just_pressed("dash") and _dash_cooldown_timer <= 0:
 		call_deferred("change_state", State.DASH)
 		
@@ -188,6 +200,57 @@ func process_dash(delta):
 	velocity.x = _dash_direction * dash_speed
 	velocity.y = 0.0
 	move_and_slide()
+
+# ---------------- 攻击 ----------------
+## 检测攻击输入并切换到对应攻击状态。
+## 上劈：按住 W + J；下劈：空中按住 S + J；其余情况为横劈（1/2 交替）。
+func _try_start_attack() -> bool:
+	if not Input.is_action_just_pressed("attack"):
+		return false
+
+	if Input.is_action_pressed("move_up"):
+		call_deferred("change_state", State.ATTACK_UP)
+	elif Input.is_action_pressed("move_down") and not is_on_floor():
+		call_deferred("change_state", State.ATTACK_DOWN)
+	else:
+		call_deferred("change_state", State.ATTACK)
+	return true
+
+func process_attack(delta: float) -> void:
+	if isStateNew:
+		_begin_attack()
+	elif Input.is_action_just_pressed("dash") and _dash_cooldown_timer <= 0:
+		# 空洞骑士中冲刺可以取消攻击后摇
+		call_deferred("change_state", State.DASH)
+		return
+
+	_apply_gravity(delta)
+	move_and_slide()
+
+## 根据当前攻击状态播放对应动画。
+func _begin_attack() -> void:
+	_is_double_jumping = false
+
+	var anim_name: String
+	match currentState:
+		State.ATTACK_UP:
+			anim_name = ANIM_ATTACK_UP
+		State.ATTACK_DOWN:
+			anim_name = ANIM_ATTACK_DOWN
+		_:
+			if _next_slash_is_second:
+				anim_name = ANIM_ATTACK_SLASH2
+			else:
+				anim_name = ANIM_ATTACK_SLASH1
+			_next_slash_is_second = not _next_slash_is_second
+
+	_current_anim = anim_name
+	anim.play(anim_name)
+
+## 攻击动画结束，回到普通状态。
+func _end_attack() -> void:
+	_current_anim = ""
+	call_deferred("change_state", State.NORMAL)
 
 # ---------------- 计时器与落地重置 ----------------
 func _update_timers_after_move(delta: float) -> void:
@@ -220,4 +283,6 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		_is_double_jumping = false
 	elif anim_name == ANIM_DASH and _is_dashing:
 		_end_dash()
+	elif anim_name in [ANIM_ATTACK_SLASH1, ANIM_ATTACK_SLASH2, ANIM_ATTACK_UP, ANIM_ATTACK_DOWN]:
+		_end_attack()
 		
