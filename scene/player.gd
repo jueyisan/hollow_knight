@@ -41,7 +41,7 @@ extends CharacterBody2D
 ## 冲刺冷却时间（秒）。冲刺结束后经过该时长才能再次冲刺。
 @export var dash_cooldown: float = 0.20
 
-@onready var sprite_area: Area2D = $SpriteArea
+@onready var sprite_node: Node2D = $SpriteNode
 @onready var anim: AnimationPlayer = $AnimationPlayer
 
 enum State{ NORMAL, DASH, ATTACK, ATTACK_UP, ATTACK_DOWN, ATTACK_JUMP,
@@ -165,7 +165,7 @@ func _handle_horizontal_movement(delta: float) -> void:
 
 	if direction != 0.0:
 		velocity.x = move_toward(velocity.x, target_speed, accel * delta)
-		sprite_area.scale.x = -1 if direction < 0.0 else 1
+		turn_direction(direction)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, fric * delta)
 				
@@ -182,15 +182,18 @@ func process_normal(delta):
 		return
 	if Input.is_action_just_pressed("dash") and _dash_cooldown_timer <= 0:
 		call_deferred("change_state", State.DASH)
+
+func turn_direction(dir : float):
+	sprite_node.scale.x = -1 if dir < 0.0 else 1
 		
 func process_dash(delta):
 	if isStateNew:
 		var direction := Input.get_axis("move_left", "move_right")
 		if direction == 0.0:
-			_dash_direction = sprite_area.scale.x
+			_dash_direction = sprite_node.scale.x
 		else:
 			_dash_direction = direction
-			sprite_area.scale.x = -1 if direction < 0.0 else 1
+			turn_direction(direction)
 		
 		_is_double_jumping = false
 		_is_dashing = true
