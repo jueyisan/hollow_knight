@@ -144,8 +144,8 @@ tile_set = SubResource("TileSet_fb1ex")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1461683545]
 
-[node name="CharacterBody2D" parent="." unique_id=1547339423 instance=ExtResource("2_ry1uq")]
-position = Vector2(-32, -23)
-
 [node name="Boss" parent="." unique_id=1219085339 instance=ExtResource("3_fb1ex")]
 position = Vector2(77, 32)
+
+[node name="Player" parent="." unique_id=1547339423 instance=ExtResource("2_ry1uq")]
+position = Vector2(-32, -23)

@@ -86,6 +86,54 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(0, -16)]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HitBox/Attack1/CollisionPolygon2D:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("HitBox/Attack2/CollisionPolygon2D:disabled")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("HitBox/AttackUp/CollisionPolygon2D:disabled")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("HitBox/AttackDown/CollisionPolygon2D:disabled")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_ihjo1"]
 resource_name = "上劈"
@@ -163,6 +211,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(0, -16)]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HitBox/AttackUp/CollisionPolygon2D:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.06652809, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
 
 [sub_resource type="Animation" id="Animation_34jf3"]
 resource_name = "下劈"
@@ -239,6 +299,18 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HitBox/AttackDown/CollisionPolygon2D:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.13305618),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
 }
 
 [sub_resource type="Animation" id="Animation_s4jxa"]
@@ -548,6 +620,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(6, -16)]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HitBox/Attack1/CollisionPolygon2D:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.13413793),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
 
 [sub_resource type="Animation" id="Animation_dk1vr"]
 resource_name = "横劈2"
@@ -624,6 +708,18 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(6, -16)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HitBox/Attack2/CollisionPolygon2D:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.13359706),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
 }
 
 [sub_resource type="Animation" id="Animation_fvtld"]
@@ -952,7 +1048,7 @@ _data = {
 &"黑色冲刺": SubResource("Animation_u7b46")
 }
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1547339423]
+[node name="Player" type="CharacterBody2D" unique_id=1547339423]
 collision_layer = 2
 script = ExtResource("1_ct4mp")
 
@@ -964,7 +1060,46 @@ texture = ExtResource("1_xo3ru")
 hframes = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=941217214]
+visible = false
 polygon = PackedVector2Array(-5, 0, -5, -20, 6, -20, 6, 0)
+
+[node name="HitBox" type="Node2D" parent="." unique_id=708453564]
+
+[node name="Attack1" type="Area2D" parent="HitBox" unique_id=115856333]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack1" unique_id=877991239]
+visible = false
+polygon = PackedVector2Array(2, -25, 21, -25, 34, -16, 34, -8, 22, -4, 6, -4)
+disabled = true
+
+[node name="Attack2" type="Area2D" parent="HitBox" unique_id=165192897]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack2" unique_id=2089049064]
+visible = false
+polygon = PackedVector2Array(3, -22, 26, -22, 35, -18, 35, -7, 15, -1)
+disabled = true
+
+[node name="AttackUp" type="Area2D" parent="HitBox" unique_id=1659694608]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackUp" unique_id=1320937200]
+visible = false
+polygon = PackedVector2Array(-19, -6, -19, -35, -6, -48, 8, -48, 17, -40, 17, -18)
+disabled = true
+
+[node name="AttackDown" type="Area2D" parent="HitBox" unique_id=946505698]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackDown" unique_id=727896309]
+visible = false
+polygon = PackedVector2Array(18, -7, 17, 11, 5, 21, -7, 21, -15, 3, -15, -14)
+disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=338812291]
 libraries/ = SubResource("AnimationLibrary_fvtld")

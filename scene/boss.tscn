@@ -162,7 +162,7 @@ _data = {
 }
 
 [node name="Boss" type="CharacterBody2D" unique_id=1219085339]
-collision_layer = 4
+collision_layer = 5
 
 [node name="SpriteNode" type="Node2D" parent="." unique_id=1183744919]
 
