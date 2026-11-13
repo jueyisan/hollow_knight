@@ -41,6 +41,7 @@ extends CharacterBody2D
 ## 冲刺冷却时间（秒）。冲刺结束后经过该时长才能再次冲刺。
 @export var dash_cooldown: float = 0.20
 
+@onready var hit_box: Node2D = $HitBox
 @onready var sprite_node: Node2D = $SpriteNode
 @onready var anim: AnimationPlayer = $AnimationPlayer
 
@@ -213,6 +214,7 @@ func process_normal(delta):
 
 func turn_direction(dir : float):
 	sprite_node.scale.x = -1 if dir < 0.0 else 1
+	hit_box.scale.x = -1 if dir < 0.0 else 1
 		
 func process_dash(delta):
 	if isStateNew:

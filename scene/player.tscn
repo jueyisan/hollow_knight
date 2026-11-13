@@ -1070,7 +1070,6 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack1" unique_id=877991239]
-visible = false
 polygon = PackedVector2Array(2, -25, 21, -25, 34, -16, 34, -8, 22, -4, 6, -4)
 disabled = true
 
@@ -1079,7 +1078,6 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack2" unique_id=2089049064]
-visible = false
 polygon = PackedVector2Array(3, -22, 26, -22, 35, -18, 35, -7, 15, -1)
 disabled = true
 
@@ -1088,7 +1086,6 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackUp" unique_id=1320937200]
-visible = false
 polygon = PackedVector2Array(-19, -6, -19, -35, -6, -48, 8, -48, 17, -40, 17, -18)
 disabled = true
 
@@ -1097,7 +1094,6 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackDown" unique_id=727896309]
-visible = false
 polygon = PackedVector2Array(18, -7, 17, 11, 5, 21, -7, 21, -15, 3, -15, -14)
 disabled = true
 
