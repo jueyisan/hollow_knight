@@ -2,6 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://btetmryw606gp" path="res://assets/boss/表弟站立.png" id="1_boss"]
 [ext_resource type="Script" uid="uid://bku70rymeu0tf" path="res://scene/boss.gd" id="1_et0im"]
+[ext_resource type="Shader" uid="uid://bkw1yj1ngfmmj" path="res://scene/闪白.gdshader" id="2_285t0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fl70q"]
+shader = ExtResource("2_285t0")
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
@@ -167,6 +171,7 @@ collision_layer = 4
 script = ExtResource("1_et0im")
 
 [node name="SpriteNode" type="Node2D" parent="." unique_id=1183744919]
+material = SubResource("ShaderMaterial_fl70q")
 
 [node name="Sprite2D" type="Sprite2D" parent="SpriteNode" unique_id=1616818514]
 position = Vector2(0, -16)

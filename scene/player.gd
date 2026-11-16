@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 # ---- 水平移动 ----
 ## 最大水平移动速度（px/s）。对应空洞骑士约 8.3 格/秒的奔跑速度。
@@ -41,6 +42,7 @@ extends CharacterBody2D
 ## 冲刺冷却时间（秒）。冲刺结束后经过该时长才能再次冲刺。
 @export var dash_cooldown: float = 0.20
 
+@onready var hurt_box: Area2D = $HurtBox
 @onready var hit_box: Node2D = $HitBox
 @onready var sprite_node: Node2D = $SpriteNode
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -64,17 +66,6 @@ const ANIM_ATTACK_DOWN := "下劈"
 # 判定“正在移动”的最小水平速度阈值
 const MOVE_THRESHOLD := 1.0
 
-# ---- 攻击命中框 ----
-## 所有攻击命中框的节点路径，统一管理以避免动画被打断后判定残留。
-const HITBOX_PATHS := [
-	"HitBox/Attack1",
-	"HitBox/Attack2",
-	"HitBox/AttackUp",
-	"HitBox/AttackDown",
-]
-
-var _attack_hitboxes: Array[Area2D] = []
-
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _current_anim: String = ""
@@ -92,16 +83,13 @@ var _dash_direction: float = 1.0
 ## 横劈交替标记：false 下一次为横劈1，true 下一次为横劈2。
 var _next_slash_is_second: bool = false
 
+var hurt_direction : float = 0.0
+
 var currentState = State.NORMAL
 var isStateNew = true
 
 func _ready() -> void:
 	anim.animation_finished.connect(_on_animation_finished)
-	_attack_hitboxes.clear()
-	for path in HITBOX_PATHS:
-		var hitbox := get_node_or_null(path) as Area2D
-		if hitbox != null:
-			_attack_hitboxes.append(hitbox)
 	_disable_all_hitboxes()
 
 func _physics_process(delta: float) -> void:
@@ -116,6 +104,8 @@ func _physics_process(delta: float) -> void:
 			process_attack(delta)
 		State.ATTACK_JUMP:
 			process_attack_jump(delta)
+		State.HURT:
+			process_hurt(delta)
 	isStateNew = false
 
 func change_state(newState):
@@ -130,7 +120,7 @@ func _is_attack_state(state) -> bool:
 
 ## 关闭所有攻击命中框。攻击动画会在各自的判定帧重新开启。
 func _disable_all_hitboxes() -> void:
-	for hitbox in _attack_hitboxes:
+	for hitbox in hit_box.get_children():
 		hitbox.monitoring = false
 		hitbox.monitorable = false
 
@@ -237,6 +227,24 @@ func process_dash(_delta):
 	velocity.y = 0.0
 	move_and_slide()
 
+func process_hurt(delta):
+	if isStateNew:
+		wudi()
+		velocity.x = hurt_direction * 150.0
+		velocity.y = -150
+		turn_direction(-hurt_direction)
+		anim.play("受击")
+	_apply_gravity(delta)
+	move_and_slide()		
+
+func wudi():
+	var tween : Tween = create_tween()
+	tween.set_loops(10)
+	tween.finished.connect(func():hurt_box.monitorable = true)
+	hurt_box.monitorable = false
+	tween.tween_property(self,"visible",false,0.06)
+	tween.chain().tween_property(self,"visible",true,0.06)
+	
 # ---------------- 攻击 ----------------
 ## 检测攻击输入并切换到对应攻击状态。
 ## 上劈：按住 W + J；下劈：空中按住 S + J；其余情况为横劈（1/2 交替）。
@@ -335,13 +343,24 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		_end_dash()
 	elif anim_name in [ANIM_ATTACK_SLASH1, ANIM_ATTACK_SLASH2, ANIM_ATTACK_UP, ANIM_ATTACK_DOWN]:
 		_end_attack()
+	elif anim_name == "受击":
+		call_deferred("change_state", State.NORMAL)
 
+func hurt(enemy : Enemy):
+	if enemy == null:
+		return
+	hurt_direction = 1 if self.global_position.x > enemy.global_position.x else -1
+	call_deferred("change_state", State.HURT)
 
 func _on_attack_1_area_entered(area: Area2D) -> void:
+	var enemy : Enemy = area.get_parent()
+	enemy.hurt(self)
 	self.global_position.x -= sprite_node.scale.x * 5
 
 
 func _on_attack_2_area_entered(area: Area2D) -> void:
+	var enemy : Enemy = area.get_parent()
+	enemy.hurt(self)
 	self.global_position.x -= sprite_node.scale.x * 5
 
 
