@@ -216,7 +216,7 @@ func turn_direction(dir : float):
 	sprite_node.scale.x = -1 if dir < 0.0 else 1
 	hit_box.scale.x = -1 if dir < 0.0 else 1
 		
-func process_dash(delta):
+func process_dash(_delta):
 	if isStateNew:
 		var direction := Input.get_axis("move_left", "move_right")
 		if direction == 0.0:
@@ -319,3 +319,11 @@ func _on_animation_finished(anim_name: StringName) -> void:
 	elif anim_name in [ANIM_ATTACK_SLASH1, ANIM_ATTACK_SLASH2, ANIM_ATTACK_UP, ANIM_ATTACK_DOWN]:
 		_end_attack()
 		
+
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	print("受伤")
+
+
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	print("受伤2")

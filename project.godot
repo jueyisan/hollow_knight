@@ -17,11 +17,6 @@ config/icon="uid://dcdgt73wlwq4x"
 
 [autoload]
 
-GameplayAbilitySystem="*uid://u2lf4qtnkmft"
-DamageCalculator="*uid://b2jxgcjagrkdx"
-TagManager="*uid://crdi6238nttlg"
-AbilityEventBus="*uid://dly4cms3ynkwf"
-GameplayCueManager="*uid://b4t83autfu2j7"
 MCPRuntimeProbe="*res://addons/godot_mcp/runtime/mcp_runtime_probe.gd"
 
 [display]
@@ -34,7 +29,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_ability_system/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 
 [importer_defaults]
 

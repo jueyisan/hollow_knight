@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://7ooexydksfrv"]
 
-[ext_resource type="Texture2D" uid="uid://btetmryw606gp" path="res://assert/boss/表弟站立.png" id="1_boss"]
+[ext_resource type="Texture2D" uid="uid://btetmryw606gp" path="res://assets/boss/表弟站立.png" id="1_boss"]
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
