@@ -290,15 +290,17 @@ func _end_attack() -> void:
 
 func process_attack_jump(delta):
 	if isStateNew:
-		canDash = true
-		canDoubleJump = true
-		velocity.x = 0
-		velocity.y = -260
-	if velocity.y >= -130:
+		_dash_cooldown_timer = 0.0
+		_has_double_jumped = false
+		_is_double_jumping = false
+		velocity.x = 0.0
+		velocity.y = -350.0
+	if velocity.y >= -100.0:
 		call_deferred("change_state", State.NORMAL)
-	if Input.is_action_just_pressed("dash") and canDash == true:
+	if Input.is_action_just_pressed("dash") and _dash_cooldown_timer <= 0.0:
 		call_deferred("change_state", State.DASH)
-	apply_gravity_movement(delta)
+	_apply_gravity(delta)
+	move_and_slide()
 
 # ---------------- 计时器与落地重置 ----------------
 func _update_timers_after_move(delta: float) -> void:

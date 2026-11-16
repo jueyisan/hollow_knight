@@ -1051,21 +1051,6 @@ _data = {
 [node name="Player" type="CharacterBody2D" unique_id=1547339423]
 collision_layer = 2
 script = ExtResource("1_ct4mp")
-max_speed = null
-acceleration = null
-friction = null
-air_acceleration = null
-air_friction = null
-jump_velocity = null
-double_jump_velocity = null
-gravity = null
-fall_gravity_multiplier = null
-jump_cut_multiplier = null
-coyote_time = null
-jump_buffer_time = null
-max_fall_speed = null
-dash_speed = null
-dash_cooldown = null
 
 [node name="SpriteNode" type="Node2D" parent="." unique_id=1063373311]
 
