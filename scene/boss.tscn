@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://7ooexydksfrv"]
 
 [ext_resource type="Texture2D" uid="uid://btetmryw606gp" path="res://assets/boss/表弟站立.png" id="1_boss"]
+[ext_resource type="Script" uid="uid://bku70rymeu0tf" path="res://scene/boss.gd" id="1_et0im"]
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
@@ -163,6 +164,7 @@ _data = {
 
 [node name="Boss" type="CharacterBody2D" unique_id=1219085339]
 collision_layer = 4
+script = ExtResource("1_et0im")
 
 [node name="SpriteNode" type="Node2D" parent="." unique_id=1183744919]
 
@@ -177,3 +179,23 @@ polygon = PackedVector2Array(-7, 0, -7, -25, 7, -25, 7, 0)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1703046461]
 libraries/ = SubResource("AnimationLibrary_boss")
 autoplay = &"站立"
+
+[node name="HurtBox" type="Area2D" parent="." unique_id=1339982416]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HurtBox" unique_id=1375613024]
+polygon = PackedVector2Array(-6, -24, 6, -24, 6, 0, -6, 0)
+
+[node name="HitBox" type="Node2D" parent="." unique_id=1219478963]
+
+[node name="BodyHit" type="Area2D" parent="HitBox" unique_id=2075069909]
+collision_layer = 64
+collision_mask = 8
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/BodyHit" unique_id=1771418521]
+polygon = PackedVector2Array(-6, -24, 6, -24, 6, 0, -6, 0)
+
+[connection signal="area_entered" from="HitBox/BodyHit" to="." method="_on_body_hit_area_entered"]

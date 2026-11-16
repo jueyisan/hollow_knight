@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://dg6gnd3ymadjp"]
+
+[ext_resource type="Script" uid="uid://s761ya5brtkn" path="res://test.gd" id="1_8uh7m"]
+[ext_resource type="Texture2D" uid="uid://nja0yf0e2tp1" path="res://icon.svg" id="1_37kl0"]
+
+[sub_resource type="Animation" id="Animation_6uqi0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D/Area2D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_8uh7m"]
+resource_name = "test"
+length = 0.16667001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D/Area2D:monitoring")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06857419, 0.10081429, 0.13356614),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6uqi0"]
+_data = {
+&"RESET": SubResource("Animation_6uqi0"),
+&"test": SubResource("Animation_8uh7m")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_37kl0"]
+size = Vector2(128, 128)
+
+[node name="Node2D" type="Node2D" unique_id=79772018]
+script = ExtResource("1_8uh7m")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=825373654]
+libraries/ = SubResource("AnimationLibrary_6uqi0")
+autoplay = &"test"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=338646936]
+position = Vector2(112, 82)
+texture = ExtResource("1_37kl0")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=2049498111]
+collision_layer = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=2057840647]
+shape = SubResource("RectangleShape2D_37kl0")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=1256094250]
+position = Vector2(198, 83)
+texture = ExtResource("1_37kl0")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D2" unique_id=1849331908]
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D2/Area2D" unique_id=1524515126]
+shape = SubResource("RectangleShape2D_37kl0")
+
+[connection signal="area_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_area_entered"]

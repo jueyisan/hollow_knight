@@ -1,5 +1,10 @@
 # AGENTS.md
 
+## 语言规则
+- 默认始终使用简体中文进行**思考（reasoning）**与所有最终回答。
+- 计划、工具调用、总结、代码注释同样使用简体中文。
+- 仅代码、命令、文件路径、变量名、API 名称等必须原样保留的内容使用英文。
+
 ## 项目
 
 - Godot 4.6.3（Forward Plus，Windows 上使用 D3D12）2D 类空洞骑士横版平台游戏。主场景：`scene/main_scene.tscn`（根节点 `MainScene`）。

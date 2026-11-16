@@ -99,9 +99,13 @@ move_down={
 
 [layer_names]
 
-2d_physics/layer_1="地面"
-2d_physics/layer_2="玩家"
-2d_physics/layer_3="怪物"
+2d_physics/layer_1="World"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Enemy"
+2d_physics/layer_4="PlayerHurt"
+2d_physics/layer_5="PlayerHit"
+2d_physics/layer_6="EnemyHurt"
+2d_physics/layer_7="EnemyHit"
 
 [physics]
 

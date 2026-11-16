@@ -89,50 +89,50 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("HitBox/Attack1/CollisionPolygon2D:disabled")
+tracks/6/path = NodePath("HitBox/AttackUp:monitoring")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("HitBox/Attack2/CollisionPolygon2D:disabled")
+tracks/7/path = NodePath("HitBox/AttackDown:monitoring")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("HitBox/AttackUp/CollisionPolygon2D:disabled")
+tracks/8/path = NodePath("HitBox/Attack1:monitoring")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("HitBox/AttackDown/CollisionPolygon2D:disabled")
+tracks/9/path = NodePath("HitBox/Attack2:monitoring")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_ihjo1"]
@@ -214,14 +214,14 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("HitBox/AttackUp/CollisionPolygon2D:disabled")
+tracks/6/path = NodePath("HitBox/AttackUp:monitoring")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0.06652809, 0.2),
+"times": PackedFloat32Array(0.06607685, 0.19984218),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false, true]
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_34jf3"]
@@ -303,14 +303,14 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("HitBox/AttackDown/CollisionPolygon2D:disabled")
+tracks/6/path = NodePath("HitBox/AttackDown:monitoring")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.13305618),
+"times": PackedFloat32Array(0, 0.13376532),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false, true]
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_s4jxa"]
@@ -623,14 +623,14 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("HitBox/Attack1/CollisionPolygon2D:disabled")
+tracks/6/path = NodePath("HitBox/Attack1:monitoring")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.13413793),
+"times": PackedFloat32Array(0, 0.13537696),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false, true]
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_dk1vr"]
@@ -712,14 +712,14 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("HitBox/Attack2/CollisionPolygon2D:disabled")
+tracks/6/path = NodePath("HitBox/Attack2:monitoring")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.13359706),
+"times": PackedFloat32Array(0, 0.13457115),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false, true]
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_fvtld"]
@@ -1051,6 +1051,21 @@ _data = {
 [node name="Player" type="CharacterBody2D" unique_id=1547339423]
 collision_layer = 2
 script = ExtResource("1_ct4mp")
+max_speed = null
+acceleration = null
+friction = null
+air_acceleration = null
+air_friction = null
+jump_velocity = null
+double_jump_velocity = null
+gravity = null
+fall_gravity_multiplier = null
+jump_cut_multiplier = null
+coyote_time = null
+jump_buffer_time = null
+max_fall_speed = null
+dash_speed = null
+dash_cooldown = null
 
 [node name="SpriteNode" type="Node2D" parent="." unique_id=1063373311]
 
@@ -1063,8 +1078,9 @@ hframes = 4
 polygon = PackedVector2Array(-5, 0, -5, -20, 6, -20, 6, 0)
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=1473666795]
-collision_layer = 2
-collision_mask = 4
+collision_layer = 8
+collision_mask = 0
+monitoring = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HurtBox" unique_id=1535994830]
 polygon = PackedVector2Array(-4, -19, 5, -19, 5, 0, -4, 0)
@@ -1072,39 +1088,44 @@ polygon = PackedVector2Array(-4, -19, 5, -19, 5, 0, -4, 0)
 [node name="HitBox" type="Node2D" parent="." unique_id=708453564]
 
 [node name="Attack1" type="Area2D" parent="HitBox" unique_id=115856333]
-collision_layer = 0
-collision_mask = 4
+collision_layer = 16
+collision_mask = 32
+monitoring = false
+monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack1" unique_id=877991239]
 polygon = PackedVector2Array(2, -25, 21, -25, 34, -16, 34, -8, 22, -4, 6, -4)
-disabled = true
 
 [node name="Attack2" type="Area2D" parent="HitBox" unique_id=165192897]
-collision_layer = 0
-collision_mask = 4
+collision_layer = 16
+collision_mask = 32
+monitoring = false
+monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/Attack2" unique_id=2089049064]
 polygon = PackedVector2Array(3, -22, 26, -22, 35, -18, 35, -7, 15, -1)
-disabled = true
 
 [node name="AttackUp" type="Area2D" parent="HitBox" unique_id=1659694608]
-collision_layer = 0
-collision_mask = 4
+collision_layer = 16
+collision_mask = 32
+monitoring = false
+monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackUp" unique_id=1320937200]
 polygon = PackedVector2Array(-19, -6, -19, -35, -6, -48, 8, -48, 17, -40, 17, -18)
-disabled = true
 
 [node name="AttackDown" type="Area2D" parent="HitBox" unique_id=946505698]
-collision_layer = 0
-collision_mask = 4
+collision_layer = 16
+collision_mask = 32
+monitoring = false
+monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox/AttackDown" unique_id=727896309]
 polygon = PackedVector2Array(18, -7, 17, 11, 5, 21, -7, 21, -15, 3, -15, -14)
-disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=338812291]
 libraries/ = SubResource("AnimationLibrary_fvtld")
 
-[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
-[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="area_entered" from="HitBox/Attack1" to="." method="_on_attack_1_area_entered"]
+[connection signal="area_entered" from="HitBox/Attack2" to="." method="_on_attack_2_area_entered"]
+[connection signal="area_entered" from="HitBox/AttackDown" to="." method="_on_attack_down_area_entered"]

@@ -67,13 +67,13 @@ const MOVE_THRESHOLD := 1.0
 # ---- 攻击命中框 ----
 ## 所有攻击命中框的节点路径，统一管理以避免动画被打断后判定残留。
 const HITBOX_PATHS := [
-	"HitBox/Attack1/CollisionPolygon2D",
-	"HitBox/Attack2/CollisionPolygon2D",
-	"HitBox/AttackUp/CollisionPolygon2D",
-	"HitBox/AttackDown/CollisionPolygon2D",
+	"HitBox/Attack1",
+	"HitBox/Attack2",
+	"HitBox/AttackUp",
+	"HitBox/AttackDown",
 ]
 
-var _attack_hitboxes: Array[CollisionPolygon2D] = []
+var _attack_hitboxes: Array[Area2D] = []
 
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
@@ -99,7 +99,7 @@ func _ready() -> void:
 	anim.animation_finished.connect(_on_animation_finished)
 	_attack_hitboxes.clear()
 	for path in HITBOX_PATHS:
-		var hitbox := get_node_or_null(path) as CollisionPolygon2D
+		var hitbox := get_node_or_null(path) as Area2D
 		if hitbox != null:
 			_attack_hitboxes.append(hitbox)
 	_disable_all_hitboxes()
@@ -114,6 +114,8 @@ func _physics_process(delta: float) -> void:
 			process_dash(delta)
 		State.ATTACK, State.ATTACK_UP, State.ATTACK_DOWN:
 			process_attack(delta)
+		State.ATTACK_JUMP:
+			process_attack_jump(delta)
 	isStateNew = false
 
 func change_state(newState):
@@ -129,7 +131,8 @@ func _is_attack_state(state) -> bool:
 ## 关闭所有攻击命中框。攻击动画会在各自的判定帧重新开启。
 func _disable_all_hitboxes() -> void:
 	for hitbox in _attack_hitboxes:
-		hitbox.disabled = true
+		hitbox.monitoring = false
+		hitbox.monitorable = false
 
 # ---------------- 动画状态机 ----------------
 func _update_animation() -> void:
@@ -285,6 +288,18 @@ func _end_attack() -> void:
 	_current_anim = ""
 	call_deferred("change_state", State.NORMAL)
 
+func process_attack_jump(delta):
+	if isStateNew:
+		canDash = true
+		canDoubleJump = true
+		velocity.x = 0
+		velocity.y = -260
+	if velocity.y >= -130:
+		call_deferred("change_state", State.NORMAL)
+	if Input.is_action_just_pressed("dash") and canDash == true:
+		call_deferred("change_state", State.DASH)
+	apply_gravity_movement(delta)
+
 # ---------------- 计时器与落地重置 ----------------
 func _update_timers_after_move(delta: float) -> void:
 	if is_on_floor():
@@ -298,7 +313,7 @@ func _update_timers_after_move(delta: float) -> void:
 func _end_dash() -> void:
 	_is_dashing = false
 	_dash_cooldown_timer = dash_cooldown
-	# 不人为衰减速度，交给 _handle_horizontal_movement 统一处理
+	# 不人为衰减速度，交给 _handle_horizontal_movement 统一处理da
 	_current_anim = ""
 	
 	# === 修复：冲刺结束时立刻按当前输入接管水平速度 ===
@@ -318,12 +333,15 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		_end_dash()
 	elif anim_name in [ANIM_ATTACK_SLASH1, ANIM_ATTACK_SLASH2, ANIM_ATTACK_UP, ANIM_ATTACK_DOWN]:
 		_end_attack()
-		
 
 
-func _on_hurt_box_body_entered(body: Node2D) -> void:
-	print("受伤")
+func _on_attack_1_area_entered(area: Area2D) -> void:
+	self.global_position.x -= sprite_node.scale.x * 5
 
 
-func _on_hurt_box_area_entered(area: Area2D) -> void:
-	print("受伤2")
+func _on_attack_2_area_entered(area: Area2D) -> void:
+	self.global_position.x -= sprite_node.scale.x * 5
+
+
+func _on_attack_down_area_entered(area: Area2D) -> void:
+	call_deferred("change_state", State.ATTACK_JUMP)
