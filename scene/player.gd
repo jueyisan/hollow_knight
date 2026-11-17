@@ -346,7 +346,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 	elif anim_name == "受击":
 		call_deferred("change_state", State.NORMAL)
 
-func hurt(enemy : Enemy):
+func hurt(enemy):
 	if enemy == null:
 		return
 	hurt_direction = 1 if self.global_position.x > enemy.global_position.x else -1

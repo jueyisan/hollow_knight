@@ -68,6 +68,18 @@ func _physics_process(delta: float) -> void:
 			process_shangtiao_zhunbei(delta)
 		State.FALL:
 			process_fall(delta)
+		State.MOVE:
+			process_move(delta)
+		State.JUMP:
+			process_jump(delta)
+		State.JUMP_2:
+			process_jump_2(delta)
+		State.XIACHUO_ZHUNBEI:
+			process_xiachuo_zhunbei(delta)
+		State.XIACHUO:
+			process_xiachuo(delta)
+		State.XIACHUO_JIESHU:
+			process_xiachuo_jieshu(delta)
 	isStateNew = false
 
 func process_ready(delta):
@@ -116,13 +128,69 @@ func process_shangtiao(delta):
 	move_and_slide()	
 
 func process_fall(delta):
-	#if isStateNew:
-		#$AnimationPlayer.play("下落")
+	if isStateNew:
+		anim.play("下落")
 	velocity.y += gravity * delta
 	move_and_slide()
 	if is_on_floor():
 		velocity = Vector2.ZERO
 		call_deferred("change_state", State.IDLE)
+
+func process_move(delta):
+	turn_direction()
+	if isStateNew:
+		if playerPosition.x > global_position.x:
+			velocity.x = 80
+		else:
+			velocity.x = -80
+		velocity.y = 0
+		anim.play("移动")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if abs(playerPosition.x - global_position.x) < 80:
+		call_deferred("change_state", State.HUIKAN_ZHUNBEI)
+
+func process_jump(delta):
+	if isStateNew:
+		velocity.x = playerPosition.x - global_position.x
+		velocity.y = -400
+		anim.play("跳跃")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if velocity.y > 0:
+		call_deferred("change_state", State.FALL)
+
+func process_jump_2(delta):
+	if isStateNew:
+		velocity.x = (playerPosition.x - global_position.x) * 2
+		velocity.y = -400
+		anim.play("跳跃")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if velocity.y > 0:
+		call_deferred("change_state", State.XIACHUO_ZHUNBEI)
+
+func process_xiachuo_zhunbei(delta):
+	if isStateNew:
+		velocity = Vector2.ZERO
+		anim.play("下戳准备")
+		
+
+func process_xiachuo(delta):
+	if isStateNew:
+		anim.play("下戳")
+	velocity.y += 100
+	move_and_slide()
+	if is_on_floor():
+		#$"/root/MainScene/GameCamera".camera_shake_small()
+		var guci_spawner = get_node("/root/MainScene/Enemy/GuciSpawner")
+		guci_spawner.spawn_guci()
+		call_deferred("change_state", State.XIACHUO_JIESHU)
+
+func process_xiachuo_jieshu(delta):
+	if isStateNew:
+		velocity = Vector2.ZERO
+		anim.play("下戳结束")
 
 func _on_body_hit_area_entered(area: Area2D) -> void:
 	var player : Player = area.get_parent()
@@ -141,19 +209,19 @@ func hurt_effect():
 
 func _on_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "站立":
-		call_deferred("change_state", State.HUIKAN_ZHUNBEI)
-		#if randf() < 0.3:
-			#if abs(playerPosition.x - global_position.x) < 80:
-				#call_deferred("change_state", State.HUIKAN_ZHUNBEI)
-			#else:
-				#if randf() > 0.5:
-					#call_deferred("change_state", State.MOVE)
-				#else:
-					#call_deferred("change_state", State.JUMP)
-		#else:
-			#if randf() > 0.5:
-				#call_deferred("change_state", State.JUMP_2)
-			#else:
+		if randf() < 0.3:
+			if abs(playerPosition.x - global_position.x) < 80:
+				call_deferred("change_state", State.HUIKAN_ZHUNBEI)
+			else:
+				if randf() > 0.5:
+					call_deferred("change_state", State.MOVE)
+				else:
+					call_deferred("change_state", State.JUMP)
+		else:
+			if randf() > 0.5:
+				call_deferred("change_state", State.JUMP_2)
+			else:
+				call_deferred("change_state", State.HUIKAN_ZHUNBEI)
 				#call_deferred("change_state", State.BACK_JUMP)
 	elif anim_name == "挥砍准备":
 		call_deferred("change_state", State.HUIKAN)
@@ -163,3 +231,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		call_deferred("change_state", State.SHANGTIAO)
 	elif anim_name == "上挑":
 		call_deferred("change_state", State.FALL)
+	elif anim_name == "下戳准备":
+		call_deferred("change_state", State.XIACHUO)
+	elif anim_name == "下戳结束":
+		call_deferred("change_state", State.IDLE)

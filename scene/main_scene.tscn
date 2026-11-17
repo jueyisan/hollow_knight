@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://we0vcoaobgel" path="res://scene/player.tscn" id="2_ry1uq"]
 [ext_resource type="PackedScene" uid="uid://7ooexydksfrv" path="res://scene/boss.tscn" id="3_fb1ex"]
 [ext_resource type="PackedScene" uid="uid://cvfd8fav3itlw" path="res://scene/door.tscn" id="4_x5n27"]
+[ext_resource type="Script" uid="uid://ru1b2tsknd0n" path="res://scene/guci_spawner.gd" id="6_jsie2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ry1uq"]
 texture = ExtResource("1_wgwml")
@@ -157,7 +158,10 @@ position = Vector2(-1, 0)
 [node name="Door" parent="Doors" unique_id=1872337381 instance=ExtResource("4_x5n27")]
 position = Vector2(-259, -25)
 
-[node name="EnemySystem" type="Node2D" parent="." unique_id=236359611]
+[node name="Enemy" type="Node2D" parent="." unique_id=236359611]
 
-[node name="Boss" parent="EnemySystem" unique_id=1219085339 instance=ExtResource("3_fb1ex")]
+[node name="Boss" parent="Enemy" unique_id=1219085339 instance=ExtResource("3_fb1ex")]
 position = Vector2(-504, -2)
+
+[node name="GuciSpawner" type="Node2D" parent="Enemy" unique_id=1425901624]
+script = ExtResource("6_jsie2")
