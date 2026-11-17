@@ -15,10 +15,6 @@ run/main_scene="uid://dxydbdt35s0a4"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcdgt73wlwq4x"
 
-[autoload]
-
-MCPRuntimeProbe="*res://addons/godot_mcp/runtime/mcp_runtime_probe.gd"
-
 [display]
 
 window/size/viewport_width=320

@@ -231,7 +231,7 @@ tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(0, 0.10213793),
 "transitions": PackedFloat32Array(1, 1),
-"update": 0,
+"update": 1,
 "values": [PackedVector2Array(1, -4, -18, -13, -35, -35, -35, -55, -16, -54, 4, -37, -15, -39, -15, -20, 17, -4), PackedVector2Array(4, -32, -6, -47, -19, -57, -36, -57, -36, -46, -27, -32, -19, -43)]
 }
 
@@ -409,7 +409,7 @@ tracks/7/loop_wrap = true
 tracks/7/keys = {
 "times": PackedFloat32Array(0, 0.10111655),
 "transitions": PackedFloat32Array(1, 1),
-"update": 0,
+"update": 1,
 "values": [PackedVector2Array(14, -21, -13, -30, -45, -30, -56, -24, -56, -11, -43, -4, -9, -4), PackedVector2Array(4, -8, -10, 0, -34, 0, -51, -8, -51, -22, -44, -11, -28, -7)]
 }
 

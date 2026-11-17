@@ -52,6 +52,7 @@ func _is_attack_state(state) -> bool:
 
 func _physics_process(delta: float) -> void:
 	match_player_position()
+	
 	match currentState:
 		State.READY:
 			process_ready(delta)
@@ -65,6 +66,8 @@ func _physics_process(delta: float) -> void:
 			process_shangtiao(delta)
 		State.SHANGTIAO_ZHUNBEI:
 			process_shangtiao_zhunbei(delta)
+		State.FALL:
+			process_fall(delta)
 	isStateNew = false
 
 func process_ready(delta):
@@ -85,21 +88,9 @@ func process_idle(delta):
 
 func process_huikan_zhunbei(delta):
 	if isStateNew:
+		turn_direction()
 		velocity = Vector2.ZERO
 		anim.play("挥砍准备")
-
-func process_shangtiao(delta):
-	if isStateNew:
-		velocity.x = -80 if sprite_node.scale.x == 1 else 80
-		velocity.y = -400
-		anim.play("上挑")
-	velocity.y += gravity * delta
-	move_and_slide()	
-
-func process_shangtiao_zhunbei(delta):
-	if isStateNew:
-		velocity = Vector2.ZERO
-		anim.play("上挑准备")	
 
 func process_huikan(delta):
 	if isStateNew:
@@ -108,6 +99,30 @@ func process_huikan(delta):
 		anim.play("挥砍")
 	velocity.y += gravity * delta
 	move_and_slide()
+
+
+func process_shangtiao_zhunbei(delta):
+	if isStateNew:
+		velocity = Vector2.ZERO
+		anim.play("上挑准备")	
+
+func process_shangtiao(delta):
+	if isStateNew:
+		turn_direction()
+		velocity.x = -80 if sprite_node.scale.x == 1 else 80
+		velocity.y = -400
+		anim.play("上挑")
+	velocity.y += gravity * delta
+	move_and_slide()	
+
+func process_fall(delta):
+	#if isStateNew:
+		#$AnimationPlayer.play("下落")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if is_on_floor():
+		velocity = Vector2.ZERO
+		call_deferred("change_state", State.IDLE)
 
 func _on_body_hit_area_entered(area: Area2D) -> void:
 	var player : Player = area.get_parent()
@@ -147,5 +162,4 @@ func _on_animation_finished(anim_name: StringName) -> void:
 	elif anim_name == "上挑准备":
 		call_deferred("change_state", State.SHANGTIAO)
 	elif anim_name == "上挑":
-		pass
-		#call_deferred("change_state", State.SHANGTIAO_ZHUNBEI)
+		call_deferred("change_state", State.FALL)
