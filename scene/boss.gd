@@ -80,6 +80,10 @@ func _physics_process(delta: float) -> void:
 			process_xiachuo(delta)
 		State.XIACHUO_JIESHU:
 			process_xiachuo_jieshu(delta)
+		State.BACK_JUMP:
+			process_back_jump(delta)
+		State.BACK_FALL:
+			process_back_fall(delta)
 	isStateNew = false
 
 func process_ready(delta):
@@ -192,6 +196,43 @@ func process_xiachuo_jieshu(delta):
 		velocity = Vector2.ZERO
 		anim.play("下戳结束")
 
+func process_back_jump(delta):
+	if isStateNew:
+		velocity.x = -548 - global_position.x if playerPosition.x > -416 else -284 - global_position.x
+		velocity.y = -400
+		if velocity.x < 0 and sprite_node.scale.x == 1:
+			anim.play("跳跃")
+		if velocity.x < 0 and sprite_node.scale.x == -1:
+			anim.play("后跳")
+		if velocity.x > 0 and sprite_node.scale.x == 1:
+			anim.play("后跳")
+		if velocity.x > 0 and sprite_node.scale.x == -1:
+			anim.play("跳跃")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if velocity.y > 0:
+		call_deferred("change_state", State.BACK_FALL)
+
+func process_back_fall(delta):
+	if isStateNew:
+		if velocity.x < 0 and sprite_node.scale.x == 1:
+			anim.play("下落")
+		if velocity.x < 0 and sprite_node.scale.x == -1:
+			anim.play("后跳下落")
+		if velocity.x > 0 and sprite_node.scale.x == 1:
+			anim.play("后跳下落")
+		if velocity.x > 0 and sprite_node.scale.x == -1:
+			anim.play("下落")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if is_on_floor():
+		#$AudioStreamPlayer_Fall.play()
+		velocity = Vector2.ZERO
+		#if randf() > 0.5:
+			#call_deferred("change_state", State.BAIBO)
+		#else:
+			#call_deferred("change_state", State.CHONGCI_ZHUNBEI)
+
 func _on_body_hit_area_entered(area: Area2D) -> void:
 	var player : Player = area.get_parent()
 	player.hurt(self)
@@ -221,8 +262,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 			if randf() > 0.5:
 				call_deferred("change_state", State.JUMP_2)
 			else:
-				call_deferred("change_state", State.HUIKAN_ZHUNBEI)
-				#call_deferred("change_state", State.BACK_JUMP)
+				call_deferred("change_state", State.BACK_JUMP)
 	elif anim_name == "挥砍准备":
 		call_deferred("change_state", State.HUIKAN)
 	elif anim_name == "挥砍":
