@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://c3c3m6lx7u66j"]
+
+[ext_resource type="Script" uid="uid://dwp7neep753o5" path="res://scene/baibo.gd" id="1_kpdfi"]
+[ext_resource type="Texture2D" uid="uid://bmsooifxcwv2a" path="res://assets/boss/白波本体.png" id="2_kpdfi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2dtoe"]
+atlas = ExtResource("2_kpdfi")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_147jr"]
+atlas = ExtResource("2_kpdfi")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t66i6"]
+atlas = ExtResource("2_kpdfi")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rtcm"]
+atlas = ExtResource("2_kpdfi")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2sf4f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2dtoe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_147jr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t66i6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4rtcm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kpdfi"]
+size = Vector2(54, 26)
+
+[node name="Baibo" type="Node2D" unique_id=724990560]
+script = ExtResource("1_kpdfi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=465499806]
+position = Vector2(0, -15)
+sprite_frames = SubResource("SpriteFrames_2sf4f")
+autoplay = "default"
+
+[node name="HitBox" type="Area2D" parent="." unique_id=1159827213]
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=1144239410]
+position = Vector2(1, -13)
+shape = SubResource("RectangleShape2D_kpdfi")
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

@@ -84,6 +84,14 @@ func _physics_process(delta: float) -> void:
 			process_back_jump(delta)
 		State.BACK_FALL:
 			process_back_fall(delta)
+		State.BAIBO:
+			process_baibo(delta)
+		State.CHONGCI_ZHUNBEI:
+			process_chongci_zhunbei(delta)
+		State.CHONGCI:
+			process_chongci(delta)
+		State.CHONGCI_TINGXIA:
+			process_chongci_tingxia(delta)
 	isStateNew = false
 
 func process_ready(delta):
@@ -228,10 +236,52 @@ func process_back_fall(delta):
 	if is_on_floor():
 		#$AudioStreamPlayer_Fall.play()
 		velocity = Vector2.ZERO
-		#if randf() > 0.5:
-			#call_deferred("change_state", State.BAIBO)
-		#else:
-			#call_deferred("change_state", State.CHONGCI_ZHUNBEI)
+		if randf() > 0.5:
+			call_deferred("change_state", State.BAIBO)
+		else:
+			call_deferred("change_state", State.CHONGCI_ZHUNBEI)
+
+func process_baibo(delta):
+	if isStateNew:
+		turn_direction()
+		velocity = Vector2.ZERO
+		anim.play("白波")
+
+func spawn_baibo():
+	#$"/root/MainScene/GameCamera".camera_shake_small()
+	var baibo_spawner = get_node("/root/MainScene/Enemy/BaiboSpawner")
+	if sprite_node.scale.x == 1:
+		baibo_spawner.spawn_baibo_left()
+		position.x += 5
+	else:
+		baibo_spawner.spawn_baibo_right()
+		position.x -= 5
+
+func process_chongci_zhunbei(delta):
+	if isStateNew:
+		turn_direction()
+		velocity = Vector2.ZERO
+		anim.play("冲刺准备")
+
+func process_chongci(delta):
+	if isStateNew:
+		#$"/root/MainScene/GameCamera".camera_shake_small()
+		velocity.x = -400 if sprite_node.scale.x == 1 else 400
+		velocity.y = 0
+		anim.play("冲刺")
+	velocity.y += gravity * delta
+	move_and_slide()
+	if sprite_node.scale.x == 1 and global_position.x < -500:
+		call_deferred("change_state", State.CHONGCI_TINGXIA)
+	if sprite_node.scale.x == -1 and global_position.x > -310:
+		call_deferred("change_state", State.CHONGCI_TINGXIA)
+
+func process_chongci_tingxia(delta):
+	if isStateNew:
+		anim.play("冲刺停下")
+	velocity.x = lerp(0.0, velocity.x, pow(2, -10 * delta))
+	velocity.y += gravity * delta
+	move_and_slide()
 
 func _on_body_hit_area_entered(area: Area2D) -> void:
 	var player : Player = area.get_parent()
@@ -273,5 +323,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		call_deferred("change_state", State.FALL)
 	elif anim_name == "下戳准备":
 		call_deferred("change_state", State.XIACHUO)
-	elif anim_name == "下戳结束":
+	elif anim_name == "下戳结束" or anim_name == "白波" or anim_name == "冲刺停下":
 		call_deferred("change_state", State.IDLE)
+	elif anim_name == "冲刺准备":
+		call_deferred("change_state", State.CHONGCI)

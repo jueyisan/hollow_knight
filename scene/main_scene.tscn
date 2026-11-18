@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://7ooexydksfrv" path="res://scene/boss.tscn" id="3_fb1ex"]
 [ext_resource type="PackedScene" uid="uid://cvfd8fav3itlw" path="res://scene/door.tscn" id="4_x5n27"]
 [ext_resource type="Script" uid="uid://ru1b2tsknd0n" path="res://scene/guci_spawner.gd" id="6_jsie2"]
+[ext_resource type="Script" uid="uid://cdxlyv742wsv5" path="res://scene/baibo_spawner.gd" id="7_qvu5t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ry1uq"]
 texture = ExtResource("1_wgwml")
@@ -139,6 +140,8 @@ terrain_set_0/terrain_0/color = Color(1, 0, 0, 1)
 sources/0 = SubResource("TileSetAtlasSource_ry1uq")
 
 [node name="MainScene" type="Node2D" unique_id=2091836456]
+metadata/_edit_vertical_guides_ = [-294.0]
+metadata/_edit_horizontal_guides_ = [-299.0]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=658666845]
 use_parent_material = true
@@ -165,3 +168,6 @@ position = Vector2(-504, -2)
 
 [node name="GuciSpawner" type="Node2D" parent="Enemy" unique_id=1425901624]
 script = ExtResource("6_jsie2")
+
+[node name="BaiboSpawner" type="Node2D" parent="Enemy" unique_id=858043922]
+script = ExtResource("7_qvu5t")
